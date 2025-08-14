@@ -4,6 +4,7 @@
   "compatibility_date": "2025-08-14",
   "assets": { "directory": "./dist" },
   "routes": [
-      {"pattern": "daniel-curry.com", "custom_domain": true}
+      {"pattern": "daniel-curry.com", "custom_domain": true},
+      {"pattern": "www.daniel-curry.com", "custom_domain": true}
   ]
 }
