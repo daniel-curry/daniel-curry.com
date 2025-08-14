@@ -1,16 +1,264 @@
 ---
-
+const EMAIL = "daniel@daniel-curry.com"; 
 ---
-
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Daniel — Personal Site</title>
+    <!-- Inter font (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      :root{
+        --bg: #f5f3ef;
+        --fg: #0a0a0a;
+        --muted: #555555;
+        --rule: #2b2b2b;
+        --maxw: 1120px;
+        --gap: 28px;
+        --radius: 14px;
+      }
+      *{box-sizing:border-box}
+      html{font-size:16px}
+      body{
+        margin:0; background:var(--bg); color:var(--fg);
+        font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        line-height:1.5;
+      }
+      .wrap{max-width:var(--maxw); margin:0 auto; padding:clamp(16px,4vw,56px)}
+
+      .display{font-weight:900; letter-spacing:.01em; line-height:1.02; margin:0}
+      .display-xxl{font-size:clamp(4.5rem,12vw,9.5rem)}
+      .lede{
+        font-size:clamp(1.05rem,1.6vw,1.25rem);
+        color:var(--muted); max-width:80ch; margin-top:10px; font-weight:400;
+      }
+
+      /* Section pacing */
+      .divider{border:none; border-top:2px solid var(--rule); margin:clamp(24px,5vw,40px) 0}
+
+      /* Projects: alternating left/right */
+      .projects{display:grid; gap:clamp(40px,6vw,80px)}
+      .project{
+        display:grid; grid-template-columns:repeat(12,1fr);
+        gap:var(--gap); align-items:start; /* top-align text and media */
+        grid-auto-flow:dense; /* allow backfilling so even items sit on same row */
+      }
+      .project .copy{grid-column:1 / span 5}
+      .project .media{grid-column:7 / span 6}
+      .project:nth-child(even) .copy{grid-column:8 / span 5}
+      .project:nth-child(even) .media{grid-column:1 / span 6}
+
+      @media (max-width:960px){
+        .project{grid-template-columns:1fr}
+        .project .copy,.project .media{grid-column:1 / -1}
+      }
+
+      h2{font-size:clamp(1.75rem,3.5vw,2.5rem); font-weight:900; margin:0 0 6px 0}
+      .meta{color:var(--muted); font-size:.95rem}
+      .desc{margin-top:8px; font-weight:300}
+      .link{
+        margin-top:12px; display:inline-block; color:var(--fg);
+        font-weight:600; text-decoration:none; border-bottom:1px solid var(--fg)
+      }
+      .link:hover{opacity:.75}
+
+      /* Image frames / placeholder (replace with real screenshots) */
+      .frame{
+        border:1.5px solid var(--fg); border-radius:var(--radius);
+        overflow:hidden; background:var(--bg); aspect-ratio:16/10; /* uniform size */
+      }
+      .frame > img{width:100%; height:100%; display:block; object-fit:cover}
+      .ph{width:100%; height:100%; display:block; background:linear-gradient(180deg,#e7e5e4,#d6d3d1)}
+
+      /* Top bar actions */
+      .topbar{display:flex; align-items:flex-end; justify-content:space-between; gap:20px}
+      .links{display:flex; align-items:center; gap:16px; margin-top:30px}
+      .icon-btn{display:inline-flex; align-items:center; justify-content:center; width:70px; height:70px; border:3px solid var(--fg); border-radius:12px; background:transparent; color:var(--fg); cursor:pointer; text-decoration:none}
+      .icon-btn:hover{background:var(--fg); color:var(--bg)}
+      .icon{display:block}
+      .icon svg{width:40px; height:40px; display:block}
+      .chip{border:3px solid var(--fg); background:var(--bg); color:var(--fg); border-radius:999px; padding:8px 12px; font-weight:600; text-decoration:none}
+      .chip:hover{background:var(--fg); color:var(--bg)}
+
+      /* Email popover */
+      .email-wrap{position:relative; display:inline-block}
+      .popover{
+        position:absolute; top:0; left:calc(100% + 12px); z-index:20; min-width:260px; height:70px; display:flex; align-items:center;
+        background:var(--bg); color:var(--fg); border:3px solid var(--fg); border-radius:12px; padding:0 16px; box-shadow:0px 0px 0 var(--fg);
+        opacity:0; transform:translateY(0px) scale(.985); pointer-events:none;
+        transition:opacity .22s ease, transform .22s ease; will-change: opacity, transform;
+      }
+      .popover[data-open=true]{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto }
+      @media (prefers-reduced-motion: reduce){ .popover{ transition:none } }
+      .popover .list{display:flex; flex-direction:row; align-items:center; gap:16px}
+      .popover .chip{
+        cursor:pointer; user-select:none; display:inline-flex; align-items:center; justify-content:center; text-align:center;
+        font-size:1rem; line-height:1; height:40px; padding:0 14px; -webkit-appearance:none; appearance:none; white-space:nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <!-- Name + actions -->
+      <div class="topbar">
+        <h1 class="display display-xxl">DANIEL CURRY</h1>
+      </div>
+      <p class="lede">This is where a two sentence blurb about me goes. Briefly describes who I am and what I do.</p>
+      <div class="links" aria-label="Profile links">
+          <a class="icon-btn" href="https://github.com/daniel-curry" aria-label="GitHub" title="GitHub">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+              <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z" />
+            </svg>
+          </span>
+        </a>
+        <span class="email-wrap">
+          <button class="icon-btn" id="emailBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="emailPopover" title="Email">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+                <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z" />
+              </svg>
+            </span>
+          </button>
+          <div class="popover" id="emailPopover" role="menu" aria-label="Email options" aria-hidden="true" data-open="false">
+            <div class="list">
+              <button class="chip" id="copyEmail" role="menuitem">Copy Email</button>
+              <a class="chip" id="mailtoLink" href={`mailto:${EMAIL}`} role="menuitem">Email Me!</a>
+            </div>
+          </div>
+        </span>
+      </div>
+      <hr class="divider" />
+
+      <!-- Projects -->
+      <section class="projects" id="projects">
+        <article class="project">
+          <div class="copy">
+            <h2>Project #1</h2>
+            <div class="meta">Stack • Feature • Feature</div>
+            <p class="desc">Brief two or 3 sentence description of the project and how it works, etc.</p>
+            <a class="link" href="#">GitHub →</a>
+          </div>
+          <div class="media frame"><div class="ph" aria-hidden="true"></div></div>
+        </article>
+
+        <article class="project">
+          <div class="copy">
+            <h2>Project #2</h2>
+            <div class="meta">Stack • Feature • Feature</div>
+            <p class="desc">Brief two or 3 sentence description of the project and how it works, etc.</p>
+            <a class="link" href="#">Github →</a>
+          </div>
+          <div class="media frame"><div class="ph" aria-hidden="true"></div></div>
+        </article>
+
+        <article class="project">
+          <div class="copy">
+            <h2>Project #3</h2>
+            <div class="meta">Stack • Feature • Feature</div>
+            <p class="desc">Brief two or 3 sentence description of the project and how it works, etc.</p>
+            <a class="link" href="#">Github →</a>
+          </div>
+          <div class="media frame"><div class="ph" aria-hidden="true"></div></div>
+        </article>
+      </section>
+      
+    </main>
+
+
+    <script is:inline>
+      const btn = document.getElementById('emailBtn');
+      const pop = document.getElementById('emailPopover');
+      const copyBtn = document.getElementById('copyEmail');
+      const mailtoLink = document.getElementById('mailtoLink');
+
+      function isOpen(){ return pop?.getAttribute('data-open') === 'true'; }
+      function positionPop(){
+        if(!pop || !btn) return;
+        // Default to right side of button
+        pop.style.left = 'calc(100% + 12px)';
+        pop.style.right = '';
+        pop.style.top = '0';
+        // If overflowing right edge, flip to left side
+        const btnRect = btn.getBoundingClientRect();
+        const popRect = pop.getBoundingClientRect();
+        const spaceRight = window.innerWidth - btnRect.right;
+        if(spaceRight < popRect.width + 16){
+          pop.style.left = '';
+          pop.style.right = 'calc(100% + 12px)';
+        }
+      }
+      function openPop(){
+        if(!pop || !btn) return;
+        // Ensure start state is applied, then toggle to trigger transition
+        pop.setAttribute('data-open', 'false');
+        // Force reflow so the browser registers the start state
+        void pop.offsetWidth;
+        pop.setAttribute('data-open', 'true');
+        btn.setAttribute('aria-expanded', 'true');
+        pop.setAttribute('aria-hidden', 'false');
+        // Position after it becomes visible for accurate size
+        requestAnimationFrame(()=>{
+          positionPop();
+          copyBtn?.focus();
+        });
+      }
+      function closePop(){
+        if(!pop) return;
+        // Force reflow before toggling off to ensure transition runs
+        void pop.offsetWidth;
+        pop.setAttribute('data-open', 'false');
+        btn?.setAttribute('aria-expanded', 'false');
+        pop.setAttribute('aria-hidden', 'true');
+      }
+      btn?.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        isOpen() ? closePop() : openPop();
+      });
+      // Close on outside click
+      document.addEventListener('pointerdown', (e)=>{
+        if(!pop || !btn) return;
+        const t = e.target;
+        if(t instanceof Node){
+          if(!pop.contains(t) && !btn.contains(t)){
+            closePop();
+          }
+        }
+      });
+      // Reposition on resize if open
+      window.addEventListener('resize', ()=>{ if(isOpen()) positionPop(); });
+      // Close on Escape
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape' && isOpen()) closePop();
+      });
+      // Copy handler
+      copyBtn?.addEventListener('click', async ()=>{
+        try{
+          const email = (mailtoLink?.getAttribute('href') || '').replace(/^mailto:/, '');
+          if(!email) throw new Error('No email found');
+
+          if(navigator.clipboard?.writeText){
+            await navigator.clipboard.writeText(email);
+          }else{
+            const tmp = document.createElement('textarea');
+            tmp.value = email; document.body.appendChild(tmp);
+            tmp.select(); document.execCommand('copy');
+            tmp.remove();
+          }
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(()=> copyBtn.textContent = orig || 'Copy email', 1200);
+        }catch(err){
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = 'Failed';
+          setTimeout(()=> copyBtn.textContent = orig || 'Copy email', 1200);
+        }
+      });
+    </script>
+  </body>
+  </html>
