@@ -1,5 +1,5 @@
 {
-  "name": "daniel-curry.com",
+  "name": "daniel-curry",
   // Update to today's date
   "compatibility_date": "2025-08-14",
   "assets": { "directory": "./dist" },
