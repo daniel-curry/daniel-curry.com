@@ -1,0 +1,9 @@
+{
+  "name": "daniel-curry.com",
+  // Update to today's date
+  "compatibility_date": "2025-08-14",
+  "assets": { "directory": "./dist" },
+  "routes": [
+      {"pattern": "daniel-curry.com", "custom_domain": true}
+  ]
+}
