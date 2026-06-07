@@ -1,0 +1,16 @@
+---
+// "Selected work" section: the editorial header plus the carousel island that
+// cycles through projects.
+import { site } from "../data/site";
+import ProjectCarousel from "./ProjectCarousel.tsx";
+---
+
+<section class="section">
+  <div class="section-head reveal">
+    <h2>Selected work</h2>
+    <span class="meta">[ {site.projects.length} repositories ]</span>
+  </div>
+  <div class="reveal">
+    <ProjectCarousel client:load projects={site.projects} />
+  </div>
+</section>

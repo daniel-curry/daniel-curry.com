@@ -1,0 +1,22 @@
+---
+// Top bar: monogram, section/social nav, and the theme toggle island.
+import { site } from "../data/site";
+import ThemeToggle from "./ThemeToggle.tsx";
+
+// The masthead links to a curated subset of the social links, looked up by label
+// so reordering site.links can't break them.
+const byLabel = (label: string) => site.links.find((l) => l.label === label)?.href ?? "#";
+const navLinks = [
+  { label: "GitHub", href: byLabel("GitHub") },
+  { label: "LinkedIn", href: byLabel("LinkedIn") },
+  { label: "Contact", href: byLabel("Email") },
+];
+---
+
+<header class="masthead">
+  <span class="kicker">DC</span>
+  <nav>
+    {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+    <ThemeToggle client:load />
+  </nav>
+</header>

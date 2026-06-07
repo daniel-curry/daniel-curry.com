@@ -1,0 +1,115 @@
+/* ============================================================
+   LIMELIGHT — Press editorial, lit by a moving light.
+   The whole palette is CSS custom properties set on `.dir-limelight`
+   (and overridden under [data-theme="dark"]); every descendant — including
+   the React islands — reads them, which is why these stay global.
+   ============================================================ */
+.dir-limelight {
+  --bg: oklch(0.975 0.006 85);
+  --fg: oklch(0.16 0.01 60);
+  --muted: oklch(0.46 0.012 60);
+  --border: oklch(0.16 0.01 60 / .16);
+  --border-strong: oklch(0.16 0.01 60 / .3);
+  --accent: oklch(0.7 0.17 250);
+  --accent-text: oklch(0.52 0.16 252);
+  --shot-bg: oklch(0.945 0.006 85);
+  --shot-stripe: oklch(0.16 0.01 60 / .06);
+  background: var(--bg); color: var(--fg);
+  font-family: var(--sans);
+  position: relative;
+  overflow: clip;
+}
+/* the moving limelight glow — large radius + strength, tinted for paper */
+.dir-limelight .glow {
+  position: fixed; top: 0; left: 0; width: 930px; height: 930px; margin: -465px 0 0 -465px;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, var(--accent), transparent 62%);
+  opacity: .26; filter: blur(48px); mix-blend-mode: multiply;
+  transform: translate(55vw, 30vh);
+}
+.dir-limelight[data-theme="dark"] {
+  --bg: oklch(0.18 0.008 80);
+  --fg: oklch(0.95 0.006 85);
+  --muted: oklch(0.66 0.012 70);
+  --border: oklch(0.95 0.006 85 / .16);
+  --border-strong: oklch(0.95 0.006 85 / .32);
+  --accent: oklch(0.74 0.16 250);
+  --accent-text: oklch(0.78 0.15 252);
+  --shot-bg: oklch(0.22 0.008 80);
+  --shot-stripe: oklch(0.95 0.006 85 / .06);
+}
+.dir-limelight[data-theme="dark"] .glow { mix-blend-mode: screen; opacity: .3; }
+.dir-limelight .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+
+/* masthead */
+.dir-limelight .masthead { border-bottom: 2px solid var(--fg); padding: 26px 0 14px; display: flex; justify-content: space-between; align-items: center; }
+.dir-limelight .masthead .kicker { font-family: var(--serif-instr); font-size: 34px; line-height: 1; letter-spacing: 0; }
+.dir-limelight .masthead nav { display: flex; gap: 24px; align-items: center; }
+.dir-limelight .masthead nav a { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color .2s; }
+.dir-limelight .masthead nav a:hover { color: var(--fg); }
+
+.dir-limelight .hero { padding: 60px 0 14px; }
+/* cursor-lit headline */
+.dir-limelight .spot-title { position: relative; font-family: var(--serif-instr); font-weight: 400; font-size: clamp(72px, 16vw, 230px); line-height: .82; letter-spacing: -0.02em; margin: 0; text-wrap: balance; --tx: 40%; --ty: 54%; }
+.dir-limelight .spot-title .base { color: var(--fg); display: block; }
+.dir-limelight .spot-title .lit {
+  position: absolute; top: 0; left: 0; right: 0; bottom: -0.25em; color: var(--accent); display: block; pointer-events: none;
+  -webkit-mask: radial-gradient(440px 440px at var(--tx) var(--ty), #000 0%, rgba(0,0,0,.4) 48%, transparent 72%);
+          mask: radial-gradient(440px 440px at var(--tx) var(--ty), #000 0%, rgba(0,0,0,.4) 48%, transparent 72%);
+}
+.dir-limelight .hero .sub { display: grid; grid-template-columns: 1.4fr 1fr; gap: 52px; margin: 68px 0 0; align-items: stretch; }
+.dir-limelight .hero .sub .lede { font-family: var(--serif-news); font-size: clamp(22px, 2.5vw, 30px); line-height: 1.3; font-weight: 300; margin: 0; text-wrap: pretty; }
+.dir-limelight .hero .sub .lede .drop { float: left; font-family: var(--serif-instr); font-size: 78px; line-height: .72; padding: 6px 10px 0 0; }
+.dir-limelight .hero .sub .col { font-size: 17px; line-height: 1.62; color: var(--muted); border-left: 1px solid var(--border); padding-left: 28px; }
+.dir-limelight .hero .sub .col strong { color: var(--fg); font-weight: 600; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; margin: 0 0 10px; }
+
+/* magnetic link buttons — rounded rectangles */
+.dir-limelight .links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 26px; padding: 48px 0 0; }
+.dir-limelight .links a {
+  display: inline-flex; align-items: center; gap: 10px; font-size: 14px; text-decoration: none; color: var(--fg);
+  padding: 14px 34px; border: 1px solid var(--border-strong); border-radius: 11px; background: transparent;
+  transition: border-color .25s, background .25s, color .25s, transform .2s cubic-bezier(.16,1,.3,1);
+  will-change: transform;
+}
+.dir-limelight .links a:hover { border-color: var(--accent); color: var(--accent-text); background: oklch(0.7 0.17 250 / .07); }
+.dir-limelight .links a .lab { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.dir-limelight .links a:hover .lab { color: var(--accent-text); }
+
+.dir-limelight .section { padding: 70px 0; }
+.dir-limelight .section-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--fg); padding-bottom: 12px; margin: 0 0 40px; }
+.dir-limelight .section-head h2 { font-family: var(--serif-instr); font-weight: 400; font-size: 40px; margin: 0; }
+.dir-limelight .section-head .meta { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+.dir-limelight .pj { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 50px; align-items: stretch; }
+.dir-limelight .pj-text { display: flex; flex-direction: column; height: 100%; }
+.dir-limelight .pj-copy { transition: opacity .25s ease; }
+.dir-limelight .pj-shot { align-self: start; transition: opacity .25s ease; }
+/* Project card: on real pointer hover (.shot:hover, not .pj) only the border
+   highlights — accent color + 2x width — so a real screenshot keeps its colors.
+   border-box keeps the wider border from shifting layout. */
+.dir-limelight .pj .shot { aspect-ratio: 4/3; border-radius: 12px; transition: border-color .16s ease, border-width .16s ease; }
+.dir-limelight .pj .shot:hover {
+  --border: var(--accent);
+  border-width: 2px;
+}
+.dir-limelight .pj h3 { font-family: var(--serif-instr); font-weight: 400; font-size: 66px; margin: 0; line-height: .95; }
+.dir-limelight .pj .status { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-text); border: 1px solid var(--accent); border-radius: 999px; padding: 3px 9px; display: inline-block; margin: 14px 0 0; }
+.dir-limelight .pj p { font-size: 17px; line-height: 1.6; color: var(--fg); margin: 18px 0 20px; max-width: 46ch; }
+.dir-limelight .pj .tags { display: flex; gap: 16px; flex-wrap: wrap; margin: 0 0 24px; }
+.dir-limelight .pj .tags span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.dir-limelight .pj .tags span:not(:first-child)::before { content: "/ "; opacity: .5; }
+.dir-limelight .pj .gh { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; padding-bottom: 4px; border-bottom: 2px solid var(--fg); transition: gap .2s, color .2s, border-color .2s; }
+.dir-limelight .pj .gh:hover { gap: 14px; color: var(--accent-text); border-color: var(--accent); }
+/* nav lives in the bottom-left of the text column, pinned to the card's bottom edge */
+.dir-limelight .pj-nav { display: flex; align-items: center; gap: 22px; margin-top: auto; padding-top: 36px; }
+.dir-limelight .pj-nav .car-controls { gap: 14px; }
+
+.dir-limelight footer { padding: 70px 0 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; }
+.dir-limelight footer .sig { font-family: var(--serif-news); font-style: italic; font-size: 18px; }
+.dir-limelight footer .mono { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+@media (max-width: 760px) {
+  .dir-limelight .hero .sub { grid-template-columns: 1fr; gap: 24px; }
+  .dir-limelight .pj { grid-template-columns: 1fr; gap: 28px; }
+  .dir-limelight .pj-shot { order: -1; }
+}

@@ -1,0 +1,32 @@
+---
+// Hero: the cursor-lit headline, the lede + "currently" columns, and the
+// magnetic link buttons (marked with data-mag for scripts/limelight.ts).
+import { site } from "../data/site";
+---
+
+<section class="hero">
+  <h1 class="spot-title reveal">
+    <span class="base">Daniel Curry</span>
+    <span class="lit" aria-hidden="true">Daniel Curry</span>
+  </h1>
+  <div class="sub">
+    <p class="lede reveal">
+      <span class="drop">A</span> computer science student who builds things and cares about how they're built. Learning by doing, pushing toward software worth using.
+    </p>
+    <div class="col reveal">
+      <strong>Currently</strong>
+      Studying CS at the University of Louisville. On co-op at GE Appliances,
+      working in Android on appliances.
+    </div>
+  </div>
+  <div class="links reveal">
+    {
+      site.links.map((link) => (
+        <a href={link.href} data-mag>
+          {link.label}
+          <span class="lab">{link.handle}</span>
+        </a>
+      ))
+    }
+  </div>
+</section>

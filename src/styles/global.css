@@ -1,0 +1,91 @@
+/* ============================================================
+   Base reset + tokens + cross-cutting primitives.
+   Theme-specific colors and page layout live in limelight.css.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body { margin: 0; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+::selection { background: currentColor; color: #fff; }
+
+:root {
+  --serif-news: "Newsreader", Georgia, serif;
+  --serif-instr: "Instrument Serif", Georgia, serif;
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Reveal-on-scroll primitive — the hidden state only applies once JS adds
+   `.reveal-on`, so content is never permanently invisible if scripts fail. */
+.reveal-on .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1);
+}
+.reveal-on .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+}
+
+.stage { min-height: 100vh; width: 100%; transition: background-color .45s ease, color .45s ease; }
+
+/* ---------- theme toggle (inherits the stage's CSS vars) ---------- */
+.theme-toggle {
+  appearance: none; cursor: pointer; flex: none;
+  width: 36px; height: 36px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border-strong, rgba(0,0,0,.18));
+  transition: color .22s ease, border-color .22s ease, background .22s ease, transform .22s cubic-bezier(.16,1,.3,1);
+}
+.theme-toggle:hover { color: var(--fg); border-color: var(--fg); transform: translateY(-1px); }
+.theme-toggle svg { width: 17px; height: 17px; display: block; }
+
+/* ---------- placeholder image (striped) ---------- */
+.shot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: var(--shot-bg, rgba(0,0,0,.04));
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 11px,
+    var(--shot-stripe, rgba(0,0,0,.045)) 11px 12px
+  );
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid var(--border, rgba(0,0,0,.08));
+}
+.shot span {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);
+  padding: 10px 12px;
+  background: var(--shot-bg, rgba(0,0,0,.04));
+  border-top: 1px solid var(--border, rgba(0,0,0,.08));
+  border-right: 1px solid var(--border, rgba(0,0,0,.08));
+}
+
+/* ---------- carousel nav (dots + prev/next) ---------- */
+.car-controls { display: flex; align-items: center; gap: 18px; }
+.car-btn {
+  appearance: none; background: transparent; cursor: pointer;
+  font-family: var(--mono); font-size: 13px;
+  width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid var(--border-strong, rgba(0,0,0,.18));
+  color: var(--fg); display: grid; place-items: center;
+  transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+}
+.car-btn:hover { background: var(--fg); color: var(--bg); transform: translateY(-1px); }
+.car-btn:disabled { opacity: .28; cursor: default; transform: none; background: transparent; color: var(--fg); }
+.car-dots { display: flex; gap: 8px; align-items: center; }
+.car-dot {
+  width: 7px; height: 7px; border-radius: 999px; padding: 0; border: none; cursor: pointer;
+  background: var(--border-strong, rgba(0,0,0,.2)); transition: all .3s ease;
+}
+.car-dot.on { background: var(--accent, var(--fg)); width: 22px; border-radius: 999px; }
